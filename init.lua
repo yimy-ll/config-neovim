@@ -26,6 +26,10 @@ require('packer').startup(function(use)
     },
   }
 
+  use {
+    'Exafunction/codeium.vim'
+  }
+
   use { -- Autocompletion
     'hrsh7th/nvim-cmp',
     requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
@@ -38,10 +42,11 @@ require('packer').startup(function(use)
     end,
   }
 
-  use { -- Additional text objects via treesitter
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    after = 'nvim-treesitter',
-  }
+  use({
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    after = "nvim-treesitter",
+    requires = "nvim-treesitter/nvim-treesitter",
+  })
 
   -- Git related plugins
   use 'tpope/vim-fugitive'
@@ -83,7 +88,6 @@ require('packer').startup(function(use)
   if has_plugins then
     plugins(use)
   end
-
   if is_bootstrap then
     require('packer').sync()
   end
@@ -191,10 +195,7 @@ require('Comment').setup()
 
 -- Enable `lukas-reineke/indent-blankline.nvim`
 -- See `:help indent_blankline.txt`
-require('indent_blankline').setup {
-  char = '┊',
-  show_trailing_blankline_indent = false,
-}
+require("ibl").setup()  -- update to latest version
 
 -- Gitsigns
 -- See `:help gitsigns.txt`
@@ -244,9 +245,11 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
+  auto_install = true,
+  sync_install = false,
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
-
+  ignore_install = {"help"},
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
   incremental_selection = {
